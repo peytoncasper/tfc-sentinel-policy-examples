@@ -1,0 +1,9 @@
+**/*.tfstate
+**/*.terraform.lock.hcl
+**/.terraform/
+**/.sentinel/
+**/terraform.tfstate.backup
+**/backend.tf
+**/mock-tf*.sentinel
+**/terraform.tfvars
+.DS_Store

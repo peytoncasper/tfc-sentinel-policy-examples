@@ -1,0 +1,19 @@
+import "tfplan/v2" as tfplan
+
+aws_elbs = filter tfplan.resource_changes as _, resource_changes {
+		resource_changes.mode is "managed" and
+		resource_changes.type is "aws_elb" and
+		(resource_changes.change.actions contains "create" or
+			resource_changes.change.actions is ["update"])
+}
+
+deny_elbs_without_access_logging = rule {
+	all aws_elbs as _, elb {
+		length(elb.change.after.access_logs) is not 0
+	}
+}
+
+
+main = rule {
+	deny_elbs_without_access_logging
+}

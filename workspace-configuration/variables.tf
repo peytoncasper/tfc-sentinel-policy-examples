@@ -1,0 +1,3 @@
+variable "organization" {
+    type = string
+}

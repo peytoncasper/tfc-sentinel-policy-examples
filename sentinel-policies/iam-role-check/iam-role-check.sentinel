@@ -1,0 +1,19 @@
+import "tfplan/v2" as tfplan
+
+aws_iam_roles = filter tfplan.resource_changes as _, resource_changes {
+		resource_changes.mode is "managed" and
+		resource_changes.type is "aws_iam_role" and
+		(resource_changes.change.actions contains "create" or
+			resource_changes.change.actions is ["update"])
+}
+
+deny_all_roles_without_default_policy = rule {
+	all aws_iam_roles as _, role {
+		role.change.after.managed_policy_arns contains "arn:aws:iam::502675305491:policy/policy-618033"
+	}
+}
+
+
+main = rule {
+	deny_all_roles_without_default_policy
+}
